@@ -1,0 +1,25 @@
+{
+   "type": "mysql",
+   "host": "bqytmhcu3lpizvruomcn-mysql.services.clever-cloud.com",
+   "port": 3306,
+   "username": "u6cxfuupfkciabpe",
+   "password": "wU5WY0rQpx4Nb4nDEEKT",
+   "database": "bqytmhcu3lpizvruomcn",
+   "synchronize": true,
+   "logging": false,
+   "entities": [
+      "src/entity/**/*.ts"
+   ],
+   "migrationsTableName": "migrations",
+   "migrations": [
+      "src/migration/**/*.ts"
+   ],
+   "subscribers": [
+      "src/subscriber/**/*.ts"
+   ],
+   "cli": {
+      "entitiesDir": "src/entity",
+      "migrationsDir": "src/migration",
+      "subscribersDir": "src/subscriber"
+   }
+}
