@@ -1,7 +1,7 @@
 export enum resultItemType {
-  Youtube = 'Youtube',
-  Reddit = 'Reddit',
-  Twitter = 'Twitter',
+  Youtube = 1,
+  Reddit = 2,
+  Twitter = 3,
 }
 
 interface ImageProp {
@@ -13,7 +13,7 @@ interface ImageProp {
 export default interface reusltItem {
   type: resultItemType;
   id: string;
-  image?: ImageProp;
+  image?: string;
   date: string;
   title?: string;
 }

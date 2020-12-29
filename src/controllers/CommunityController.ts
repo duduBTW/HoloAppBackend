@@ -72,10 +72,9 @@ export default new class CommunityController {
             type: resultItemType.Youtube,
             date: element.snippet.publishedAt,
             title: element.snippet.title,
-            image: {
-              medium: element.snippet.thumbnails.medium.url,
-              higth: element.snippet.thumbnails.high.url
-            }
+            image: element.snippet.thumbnails.medium.url
+            //   higth: element.snippet.thumbnails.high.url
+            // }
           })
         }
 
@@ -107,11 +106,7 @@ export default new class CommunityController {
             title: element.title,
             id: element.id,
             date: element.created_utc ? new Date(element.created_utc * 1000).toISOString() : null,
-            image: {
-              higth: element.url,
-              // Can have multiple            \/
-              medium: element.preview?.images[0].resolutions[2].url
-            }
+            image: element.preview?.images[0].resolutions[2].url
             // teste.data.children[childId]
           })
 

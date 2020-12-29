@@ -3,64 +3,77 @@ import { youtube } from 'googleapis/build/src/apis/youtube'
 import puppeteer from 'puppeteer'
 import TwitterController from '@controllers/TwitterController'
 import YoutubeController from './YoutubeController'
-// import reusltItem from '@models/ResultItem'
-// import { addDays } from 'date-fns'
-// import { User } from '@models/User'
+import { RequestWithTalent } from '@models/RequestWithTalent'
 
 export default new class TalentController {
-  public async find (req: Request, res: Response) {
+  public async pog (req: RequestWithTalent, res: Response) {
+    const talent = req.talent
+
+    await YoutubeController.syncYoutubeWithTableAll(talent)
+
+    res.status(200).send('nice')
+  }
+
+  public async createBranch (req: Request, res: Response) {
+    const {
+      branchName
+    } = req.query
+
+    await YoutubeController.createBranch(branchName.toString())
+
+    res.status(200).send('nice')
+  }
+
+  public async createTalent (req: Request, res: Response) {
+    await YoutubeController.createTalent()
+
+    res.status(200).send('nice')
+  }
+
+  public async find (req: RequestWithTalent, res: Response) {
     try {
       // Let the user edit that
-      const {
-        channelId,
-        twitterName
-        // , nextPageYt,
-        // , lastOldest
+      // Send page
+      // And send the oldest from before
+      let {
+        show
       } = req.query
+      const {
+        page,
+        previusOldest
+      } = req.query
+      const talent = req.talent
 
-      Promise.resolve(await YoutubeController.syncYoutubeWithTable(channelId.toString()))
+      show = JSON.parse(show.toString())
 
-      // const userY = await youtube('v3').channels.list({
-      //   id: [channelId.toString()],
-      //   part: ['contentDetails'],
-      //   key: process.env.YOUTUBE_TOKEN
-      // })
+      console.log('show: ', show)
 
-      // const resultApiY = await youtube('v3').playlistItems.list({
-      //   playlistId: userY.data.items[0].contentDetails.relatedPlaylists.uploads,
-      //   part: ['snippet'],
-      //   key: process.env.YOUTUBE_TOKEN,
-      //   maxResults: 10,
-      //   pageToken: nextPageYt === null || nextPageYt === undefined ? null : nextPageYt.toString()
-      // })
+      Promise.resolve(await YoutubeController.syncYoutubeWithTable(talent.youtubeId.toString()))
 
-      // var youtubeParsed = YoutubeController.parseYoutubeResponse(resultApiY)
-      // var teste = await YoutubeController.save(youtubeParsed)
-
-      // console.log('teste', teste)
       // Query youtube
-      const resultYt = await YoutubeController.findAll()
+      const resultYt = await YoutubeController.findAll(10, Number(page))
       // Oldest Date
       const oldest = resultYt.data.reduce((c, n) =>
         n.date < c.date ? n : c
       ).date.toISOString()
 
-      // var twitterParsed = TwitterController.parseTwitterResponse(await (await TwitterController.find(twitterName.toString(), oldest)).data)
+      var twitter = []
 
-      var twitter = TwitterController.parseTwitterResponsev2(await (await TwitterController.find(twitterName.toString(), oldest)))
+      if (show[0]) {
+        twitter = TwitterController.parseTwitterResponsev2(
+          await TwitterController.find(talent.twitterName.toString(), oldest, previusOldest?.toString())
+        )
+      }
+
       const result = [
         ...twitter,
-        ...resultYt.data]
+        ...resultYt.data
+      ].sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
-      // const result: Array<reusltItem> = [...youtubeParsed,
-      //   ...twitterParsed]
-
-      result.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime())
-
-      // @ts-ignore
       return res.status(200).send({
         result,
-        oldest
+        oldest,
+        count: resultYt.count
       })
     } catch (error) {
       console.log('error', error)

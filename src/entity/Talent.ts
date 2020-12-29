@@ -1,5 +1,6 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm'
 import { Branch } from './Branch'
+import { Content } from './Content'
 
 // Create a form to this on the app?
 @Entity({ name: 'talent' })
@@ -13,7 +14,7 @@ export class Talent {
   @Column()
   image: string
 
-  @Column()
+  @Column({ nullable: true, length: 500 })
   description: string
 
   @Column()
@@ -21,7 +22,10 @@ export class Talent {
 
   // Do something on the UI with this owo
   @Column()
-  birthday: Date
+  debutDate: Date
+
+  @Column()
+  birthday: string
 
   @Column()
   heigth: string
@@ -35,4 +39,7 @@ export class Talent {
   @OneToOne(() => Branch)
   @JoinColumn()
   branch: Branch;
+
+  @OneToMany(() => Content, video => video.id)
+  videos: Content[];
 }

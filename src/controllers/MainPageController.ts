@@ -52,10 +52,9 @@ export default new class MainController {
               type: resultItemType.Youtube,
               date: element.snippet.publishedAt,
               title: element.snippet.title,
-              image: {
-                medium: element.snippet.thumbnails.medium.url,
-                higth: element.snippet.thumbnails.high.url
-              }
+              image: element.snippet.thumbnails.medium.url
+              // higth: element.snippet.thumbnails.high.url
+              // }
             })
           }
         }

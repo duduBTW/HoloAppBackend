@@ -1,5 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm'
-import { ImageItem } from './ImageItem'
+import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne } from 'typeorm'
+import { Talent } from './Talent'
 
 @Entity({ name: 'youtube' })
 export class Content {
@@ -21,6 +21,7 @@ export class Content {
     @Column({ type: 'varchar', length: 255, nullable: true })
     image: string;
 
-    @OneToMany(() => ImageItem, images => images.content)
-    images: ImageItem[]
+    @ManyToOne(() => Talent, talent => talent.talentId)
+    @JoinColumn()
+    talent: Talent;
 }

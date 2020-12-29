@@ -1,5 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm'
-import { Content } from './Content'
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
 
 @Entity({ name: 'image' })
 export class ImageItem {
@@ -15,6 +14,6 @@ export class ImageItem {
   @Column({ nullable: true })
   higth: string;
 
-  @ManyToOne(() => Content, content => content.images)
-  content: Content;
+  // @ManyToOne(() => Content, content => content.images)
+  // content: Content;
 }
